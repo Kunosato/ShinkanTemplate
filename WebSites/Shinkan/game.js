@@ -61,26 +61,9 @@ window.onload = function () {
 				this.jumping = true;
 				this.jumpBoost = 0;
 			},
-			setMoveDirection: function () {
-				if (game.input.left) {
-					this.vx = -5;
-					this.scaleX = -1;
-				} else if (game.input.right) {
-					this.vx = 5;
-					this.scaleX = 1;
-				} else {
-					this.vx = 0;
-				}
-
-				if (this.vx != 0) {
-					if (game.frame % 3 == 0) {
-						this.frame %= 2;
-						++this.frame;
-					}
-				} else {
-					this.frame = 0;
-				}
-			},
+			/////////////////////////////////
+			//setMoveDirection: function () {},
+			/////////////////////////////////
 			move: function () {
 				this.jumping  = true;
 				this.vy += 1;
@@ -193,17 +176,9 @@ window.onload = function () {
 					}
 				}
 			},
-			jump: function () {
-				if (game.input.up) {
-					if (!this.jumping) {
-						this.jumpBoost = 5;
-						game.assets[Path.Audio.jump].play();
-					}
-					this.vy -= this.jumpBoost > 0 ? --this.jumpBoost : 0;
-				} else {
-					this.jumpBoost = 0;
-				}
-			},
+			/////////////////////////////////
+			//jump: function () {},
+			/////////////////////////////////
 			dead: function () {
 				game.assets[Path.Audio.gameover].play();
 				this.frame = 3;
@@ -214,7 +189,7 @@ window.onload = function () {
 				}
 			},
 			dying: function () {
-				var score = Math.round(bear.x);
+				var score = Math.round(this.x);
 				this.addEventListener('enterframe', function () {
 					this.vy += 1;
 					this.y += this.vy;
@@ -225,21 +200,14 @@ window.onload = function () {
 				this.removeEventListener('enterframe', arguments.callee);
 			}
 		});
-		var bear = new Bear(0, 0);
+		/////////////////////////////////
+		//実体をつくる
+		/////////////////////////////////
 
-		bear.addEventListener('enterframe', function (e) {
-			if (this.alive) {
-				this.setMoveDirection();
-				this.move();
-				this.jump();
-			} else {
-				this.dead();
-			}
 
-			if (this.y > 320) {
-				this.alive = false;
-			}
-		});
+		/////////////////////////////////
+		// くまの更新
+		/////////////////////////////////
 
 		/********************
 		*  Monster Class
@@ -259,23 +227,7 @@ window.onload = function () {
 				} else {
 					this.ax = 0;
 				}
-
-				//if (this.vx != 0) {
-				//	if ((game.frame - 5) % 3 == 0) {
-				//		this.frame %= 2;
-				//		++this.frame;
-				//	}
-				//} else {
-				//	this.frame = 0;
-				//}
 			},
-			//calcFriction: function () {
-			//	if (this.vx >= 0) {
-			//		this.friction = this.vx > 0.3 ? -0.3 : -this.vx;
-			//	} else {
-			//		this.friction = this.vx < -0.3 ? 0.3 : -this.vx;
-			//	}
-			//},
 			move: function () {
 				this.vy += 1;
 				var dest = new Rectangle(
@@ -404,9 +356,9 @@ window.onload = function () {
 					this.dead();
 				}
 
-				if (this.intersect(bear)) {
-					//	bear.alive = false;
-				}
+				/////////////////////////////////
+				// 敵とのあたり判定
+				/////////////////////////////////
 
 				if (this.y > 320) {
 					this.alive = false;
@@ -430,15 +382,9 @@ window.onload = function () {
 			map.loadData(mapData);
 		}
 
-		for (var i = 0; i < items.length ; i++) {
-			items[i].addEventListener('enterframe', function (e) {
-				if (this.intersect(bear) && bear.alive) {
-					game.assets[Path.Audio.get].clone().play();
-					gameScore += this.score;
-					this.parentNode.removeChild(this);
-				}
-			});
-		}
+		/////////////////////////////////
+		// アイテムとのあたり判定
+		/////////////////////////////////
 
 		/********************
 		*  Goal Instance
@@ -454,20 +400,9 @@ window.onload = function () {
 			map.loadData(mapData);
 		}
 
-		for (var i = 0; i < goals.length ; i++) {
-			goals[i].addEventListener('enterframe', function (e) {
-				if (this.intersect(bear) && bear.alive) {
-					gameScore += this.score;
-					var clear = new Sprite(267, 48);
-					clear.image = game.assets[Path.Sprite.clear];
-					clear.x = game.width / 2 - 133;
-					clear.y = game.height / 2 - 24;
-					game.rootScene.addChild(clear);
-					game.assets[Path.Audio.clear].play();
-					game.rootScene.removeChild(stage);
-				}
-			});
-		}
+		/////////////////////////////////
+		// ゴールとのあたり判定
+		/////////////////////////////////
 
 		/********************
 		*  Score Instance
@@ -485,7 +420,9 @@ window.onload = function () {
 		********************/
 		var stage = new Group();
 		stage.addChild(map);
-		stage.addChild(bear);
+		/////////////////////////////////
+		// くまを追加
+		/////////////////////////////////
 		for (var i = 0; i < monsters.length; i++) {
 			stage.addChild(monsters[i]);
 		}
@@ -495,11 +432,10 @@ window.onload = function () {
 		for (var i = 0; i < goals.length; i++) {
 			stage.addChild(goals[i]);
 		}
-		stage.addEventListener('enterframe', function (e) {
-			if (this.x > 64 - bear.x) {
-				this.x = 64 - bear.x;
-			}
-		});
+
+		/////////////////////////////////
+		// ステージのスクロール
+		/////////////////////////////////
 
 		/********************
 		*  Pad Instance

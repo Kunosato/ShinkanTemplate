@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>enchant</title>
+	<script type="text/javascript" src="libraries/enchant.js"></script>
+	<script type="text/javascript" src="libraries/nineleap.enchant.js"></script>
+	<script type="text/javascript" src="libraries/ui.enchant.js"></script>
+	<script type="text/javascript">
+		enchant();
+		enchant.Sound.enabledInMobileSafari = true;
+		if (location.protocol == 'file:') {
+			enchant.ENV.USE_WEBAUDIO = false;
+			console.log('1');
+		}
+		var Path = {
+			Sprite: {
+				clear: "images/clear.png",
+				chara1: "images/chara1.gif",
+				map1: "images/map1.gif"
+			},
+			Audio: {
+				jump: "sounds/jump.wav",
+				gameover: "sounds/gameover.wav",
+				get: "sounds/get.wav",
+				clear: "sounds/clear.wav"
+			}
+		}
+	</script>
+	<script type="text/javascript" src="map.js"></script>
+	<script type="text/javascript" src="game.js"></script>
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+</body>
+</html>
